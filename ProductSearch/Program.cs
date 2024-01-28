@@ -17,22 +17,20 @@ Console.WriteLine("Hello, World!");
 var fileName = "input-file.json";
 var path = Path.GetDirectoryName(fileName);
 var combinedPath = Path.Combine(path, fileName);
-
-var read = new StreamReader(combinedPath);
-
-Console.WriteLine($"What is the product name?");
-var userInput = Console.ReadLine();
-var product = new Product();
-
-if (userInput != null)
+try
 {
-    try
+    Console.WriteLine($"What is the product name?");
+    var userInput = Console.ReadLine().ToLower();
+    var product = new Product();
+    var read = new StreamReader(combinedPath);
+    var writer = new StreamWriter(combinedPath);
+    if (userInput != null)
     {
         while (!read.EndOfStream)
         {
             var line = read.ReadLine();
 
-            if (line != null && line.Contains("name") && (line.ToLower()).Contains(userInput.ToLower()))
+            if (line != null && line.Contains("name") && (line.ToLower()).Contains(userInput))
             {
                 var value = line.Substring(9);
                 product.Name = value.Substring(0, value.Length - 2).Trim();
@@ -60,46 +58,65 @@ if (userInput != null)
             }
         }
     }
-    catch
+
+    char answer;
+
+    if (product == null)
+    {
+        Console.WriteLine($"Sorry, that product was not found in our inventory.");
+        Console.WriteLine($"Would you like to add this product to the inventory? Y/N ");
+        answer = Console.ReadLine().ToLower()[1];
+    }
+    else
+    {
+        answer = ' ';
+    }
+
+    if (answer != 'y' && answer != 'n')
+    {
+        //Recall above code
+    }
+    else if (answer == 'y')
+    {
+        try
+        {
+            Console.WriteLine($"New Item Name: {userInput}");
+            Console.WriteLine("What is the Item Price?");
+            Decimal price = Decimal.Parse(Console.ReadLine());
+            Console.WriteLine("What is the Item Quantity?");
+            int quantity = int.Parse(Console.ReadLine());
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+
+    }
+    else if (answer == 'n')
     {
 
     }
+    // ask user for input
+    // open streamreader
+
+    // Ensure that the product search is case insensitive.
+    // • When a product is not found, ask if the product should be added.
+    //  If yes, ask for the price and the quantity, and save it in the JSON file.
+    //  Ensure the newly added product is immediately available for searching without restarting the program
+    //  (write without exiting)
+    // clean user input
+    // read from file
+    // if an item we read has a name that mataches our user input, then we grab json object containing name.
+    // error handle
+    // output
+    // close streamreader
+    // close file
+
 }
-
-string answer;
-
-if (product == null)
+catch (Exception e)
 {
-    Console.WriteLine($"Sorry, that product was not found in our inventory.");
-    Console.WriteLine($"Would you like to add this product to the inventory? Y/N ");
-    answer = Console.ReadLine();
+    Console.WriteLine(e);
+    throw;
 }
-else
-{
-    answer = "";
-}
-
-if (answer.ToLower() != "y")
-{
-
-}
-else
-{
-
-}
-
-// ask user for input
-// open streamreader
-
-// Ensure that the product search is case insensitive.
-// • When a product is not found, ask if the product should be added.
-//  If yes, ask for the price and the quantity, and save it in the JSON file.
-//  Ensure the newly added product is immediately available for searching without restarting the program
-//  (write without exiting)
-// clean user input
-// read from file
-// if an item we read has a name that mataches our user input, then we grab json object containing name.
-// error handle
-// output
-// close streamreader
-// close file
